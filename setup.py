@@ -6,13 +6,13 @@ try:
 except ImportError:
     pass
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 setup(
     name='inasafe_cli',
     version='4.2.0',
-    py_modules=['inasafe'],
+    packages=find_packages(),
     license='GPL',
     author='InaSAFE Team',
     author_email='info@inasafe.org',
