@@ -10,8 +10,8 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='inasafe_cli',
-    version='4.2.0',
+    name='inasafe-cli',
+    version='1.0.0',
     packages=find_packages(),
     license='GPL',
     author='InaSAFE Team',
@@ -20,14 +20,14 @@ setup(
     description=('Realistic natural hazard impact scenarios for better '
                  'planning, preparedness and response activities.'),
     install_requires=[
-        # 'inasafe',
+        'inasafe-core',
         'docopt'
     ],
     classifiers=[
-        'Development Status :: 5 - Stable',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: GPL V3 License',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Scientific/Engineering :: GIS',
