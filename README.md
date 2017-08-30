@@ -1,3 +1,5 @@
+This is the command line client implementation for [InaSAFE](http://inasafe.org).
+
 ## Installation
 Install on Ubuntu by:
 1. Adding InaSAFE path to environment e.g:
