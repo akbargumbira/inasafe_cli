@@ -31,13 +31,12 @@ from safe.test.utilities import get_qgis_app
 from safe.common.version import get_version
 from safe.utilities.gis import qgis_version, validate_geo_array
 from safe.utilities.osm_downloader import download
-from safe.utilities.settings import setting
 from safe.impact_function.impact_function import ImpactFunction
 from safe.datastore.folder import Folder
 from safe.definitions.constants import PREPARE_SUCCESS, ANALYSIS_SUCCESS
-from safe.definitions.utilities import map_report_component
+from safe.definitions.utilities import update_template_component
 from safe.definitions.reports.components import (
-    report_a4_blue,
+    map_report,
     standard_impact_report_metadata_pdf)
 from safe.report.impact_report import ImpactReport
 from safe.report.report_metadata import ReportMetadata
@@ -211,7 +210,7 @@ def run_impact_function(cli_arguments):
     exposure = get_layer(cli_arguments.exposure, 'Exposure Layer')
     aggregation = None
     if cli_arguments.aggregation:
-        aggregation = get_layer(cli_arguments.aggregation)
+        aggregation = get_layer(cli_arguments.aggregation, 'Aggregation Layer')
 
     # Set up impact function
     impact_function = ImpactFunction()
@@ -224,10 +223,8 @@ def run_impact_function(cli_arguments):
 
     # Set the extent
     if cli_arguments.extent:
-        crs = setting('user_extent_crs', None, str)
-        if crs:
-            impact_function.requested_extent_crs = \
-                QgsCoordinateReferenceSystem(crs)
+        impact_function.requested_extent_crs = \
+            QgsCoordinateReferenceSystem(4326)
         try:
             impact_function.requested_extent = QgsRectangle(
                 float(cli_arguments.extent[0]),
@@ -267,16 +264,18 @@ def generate_impact_map_report(cli_arguments, impact_function, iface):
 
     .. versionadded:: 4.0
     """
-    hazard_layer = get_layer(cli_arguments.hazard, 'Hazard Layer')
-    aggregation_layer = get_layer(
-        cli_arguments.aggregation, 'Aggregation Layer')
+    layers = [impact_function.hazard, impact_function.exposure]
+    aggregation_layer = impact_function.aggregation
+    if aggregation_layer:
+        layers.append(aggregation_layer)
     layer_registry = QgsMapLayerRegistry.instance()
+    layer_registry.addMapLayers(layers)
     layer_registry.addMapLayers(impact_function.outputs)
-    layer_registry.addMapLayers([hazard_layer, aggregation_layer])
 
     # create impact report instance
     report_metadata = ReportMetadata(
-        metadata_dict=map_report_component(report_a4_blue))
+        metadata_dict=update_template_component(map_report)
+    )
     impact_report = ImpactReport(
         iface,
         report_metadata,
@@ -334,11 +333,13 @@ def build_report(cli_arguments, impact_function):
     :raises: Exception
     """
     LOGGER.info('Building a report')
+    # Generate map report
     status, message = generate_impact_map_report(
         cli_arguments, impact_function, IFACE)
     if status != ImpactReport.REPORT_GENERATION_SUCCESS:
         raise Exception(message.to_text())
 
+    # Generate table report
     status, message = generate_impact_report(
         cli_arguments, impact_function, IFACE)
     if status != ImpactReport.REPORT_GENERATION_SUCCESS:

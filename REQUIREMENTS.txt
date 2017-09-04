@@ -6,3 +6,4 @@ SQLAlchemy
 nosexcover
 nose
 coverage
+inasafe-core

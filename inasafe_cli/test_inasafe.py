@@ -11,6 +11,7 @@ import shutil
 import os
 from tempfile import mkdtemp
 
+import safe
 from inasafe import (
     download_exposure,
     run_impact_function,
@@ -27,16 +28,18 @@ class TestInasafeCommandLine(unittest.TestCase):
             run from safe/ directory
     """
     def setUp(self):
+        safe_dir_path = os.path.dirname(safe.__file__)
         self.args = CommandLineArguments({
             '--download': False,
-            '--hazard':
-                '../safe/test/data/gisv4/hazard/tsunami_vector.geojson',
+            '--hazard': os.path.join(
+                safe_dir_path, 'test', 'data', 'gisv4', 'hazard',
+                'tsunami_vector.geojson'),
             '--exposure':
-                '../safe/test/data/gisv4/exposure/raster/population.asc',
-            '--extent': '106,7999364:-6,2085970:106,8525945:-6,1676174',
+                os.path.join(
+                    safe_dir_path, 'test', 'data', 'gisv4', 'exposure',
+                    'raster', 'population.asc'),
             '--aggregation': None,
-            '--layers': None,
-            '--list-functions': False,
+            '--extent': '106,7999364:-6,2085970:106,8525945:-6,1676174',
             '--output-dir': 'test_cli',
             '--version': False,
             'LAYER_NAME': []})
