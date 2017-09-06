@@ -52,10 +52,7 @@ current_dir = os.path.abspath(
 
 QGIS_APP, CANVAS, IFACE, PARENT = get_qgis_app()
 
-if 'InaSAFEQGIS' in os.environ:
-    usage_dir = os.path.join(os.environ['InaSAFEQGIS'], 'bin')
-else:
-    usage_dir = os.path.dirname(os.path.abspath(__file__))
+usage_dir = os.path.dirname(os.path.abspath(__file__))
 
 usage = r""
 usage_file = file(os.path.join(usage_dir, 'usage.txt'))
