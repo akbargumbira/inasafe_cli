@@ -1,3 +1,8 @@
+
+# InaSAFE Command Line Interface
+
+[![Build Status](https://travis-ci.org/inasafe/inasafe_cli.svg?branch=master)](https://travis-ci.org/inasafe/inasafe_cli)
+
 This is the command line client implementation for [InaSAFE](http://inasafe.org).
 
 ## Installation
