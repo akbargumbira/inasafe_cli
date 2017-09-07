@@ -1,2 +1,2 @@
 docopt
-git+https://github.com/akbargumbira/inasafe.git@master # Change this to inasafe-core once 4.2.2 is released
+inasafe-core==4.1.6
