@@ -53,7 +53,7 @@ install:
   - docker run -d --name qgis-testing-environment -v ${TRAVIS_BUILD_DIR}:/tests_directory -e ON_TRAVIS=${ON_TRAVIS} -e DISPLAY=:99 ${IMAGE}:${QGIS_VERSION_TAG}
   - sleep 10
   - docker exec -it qgis-testing-environment sh -c "qgis_setup.sh inasafe"
-  - docker exec -it qgis-testing-environment sh -c "pip install git+https://github.com/akbargumbira/inasafe.git@master"
+  - docker exec -it qgis-testing-environment sh -c "pip install -r REQUIREMENTS.txt"
 
 script:
   - docker exec -it qgis-testing-environment sh -c "qgis_testrunner.sh test_suite.test_package"
