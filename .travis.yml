@@ -57,21 +57,14 @@ install:
   - docker exec -it qgis-testing-environment sh -c "pip install -r /tests_directory/REQUIREMENTS.txt"
 
 script:
-  - ls -lah /usr/local/lib/python2.7/dist-packages/safe/
-  - ls -lsh /home/travis/virtualenv/python2.7_with_system_site_packages/local/lib/python2.7/site-packages/safe
-  - docker exec -it qgis-testing-environment sh -c "qgis_testrunner.sh test_suite.test_package"
+  - docker exec -it qgis-testing-environment sh -c "ls -lah /usr/local/lib/python2.7/dist-packages/safe/"
+  - docker exec -it qgis-testing-environment sh -c "ls -lah /tests_directory"
+  #- docker exec -it qgis-testing-environment sh -c "qgis_testrunner.sh test_suite.test_package"
 
 notifications:
   irc:
     channels:
       - "irc.freenode.org#inasafe"
     use_notice: true
-
-  email:
-    - tim@kartoza.com
-    - ismail@kartoza.com
-    - rizky@kartoza.com
-    - etienne@kartoza.com
-    - rohmat@kartoza.com
 
 sudo: false
