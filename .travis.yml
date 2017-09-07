@@ -35,8 +35,6 @@ virtualenv:
 
 branches:
   only:
-    - master
-    - develop
     - /.*/
 
 addons:
@@ -57,13 +55,7 @@ install:
   - docker exec -it qgis-testing-environment sh -c "pip install -r /tests_directory/REQUIREMENTS.txt"
 
 script:
-  - docker exec -it qgis-testing-environment sh -c "ls -lah /usr/local/lib/python2.7/dist-packages/safe/test/"
-  - docker exec -it qgis-testing-environment sh -c "ls -lah /usr/local/lib/python2.7/dist-packages/safe/test/data"
-  - docker exec -it qgis-testing-environment sh -c "ls -lah /usr/local/lib/python2.7/dist-packages/safe/test/data/gisv4/"
-  - docker exec -it qgis-testing-environment sh -c "ls -lah /usr/local/lib/python2.7/dist-packages/safe/test/data/gisv4/exposure"
-  - docker exec -it qgis-testing-environment sh -c "ls -lah /usr/local/lib/python2.7/dist-packages/safe/test/data/gisv4/exposure/raster"
-  - docker exec -it qgis-testing-environment sh -c "ls -lah /tests_directory"
-  #- docker exec -it qgis-testing-environment sh -c "qgis_testrunner.sh test_suite.test_package"
+  - docker exec -it qgis-testing-environment sh -c "qgis_testrunner.sh test_suite.test_package"
 
 notifications:
   irc:
