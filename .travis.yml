@@ -35,7 +35,8 @@ virtualenv:
 
 branches:
   only:
-    - /.*/
+    - develop
+    - master
 
 addons:
   apt:
@@ -62,5 +63,13 @@ notifications:
     channels:
       - "irc.freenode.org#inasafe"
     use_notice: true
+
+  email:
+  - tim@kartoza.com
+  - ismail@kartoza.com
+  - rizky@kartoza.com
+  - etienne@kartoza.com
+  - rohmat@kartoza.com
+
 
 sudo: false
