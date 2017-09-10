@@ -70,16 +70,23 @@ class CommandLineArguments(object):
         if not arguments_:
             return
 
-        self.hazard = arguments_['--hazard']
-        self.exposure = arguments_['--exposure']
+        self.hazard_path = arguments_['--hazard']
+        self.hazard_layer = get_layer(self.hazard_path, 'Hazard Layer')
+
+        self.exposure_path = arguments_['--exposure']
+        self.exposure_layer = get_layer(self.exposure_path, 'Exposure Layer')
+
         self.output_dir = arguments_['--output-dir']
         self.version = arguments_['--version']
 
         # optional arguments
         if arguments_['--aggregation']:
-            self.aggregation = arguments_['--aggregation']
+            self.aggregation_path = arguments_['--aggregation']
+            self.aggregation_layer = get_layer(
+                self.aggregation_path, 'Aggregation Layer')
         else:
-            self.aggregation = None
+            self.aggregation_path = None
+            self.aggregation_layer = None
             msg = 'No aggregation layer specified..'
             LOGGER.debug(msg)
 
@@ -120,24 +127,23 @@ def download_exposure(cli_arguments):
     if not os.path.exists(cli_arguments.output_dir):
         os.makedirs(cli_arguments.output_dir)
 
-    cli_arguments.exposure = os.path.join(
+    cli_arguments.exposure_path = os.path.join(
         cli_arguments.output_dir, cli_arguments.exposure_type)
     if validate_geo_array(extent):
         print 'Exposure download extent is valid'
         download(
             cli_arguments.exposure_type,
-            cli_arguments.exposure,
+            cli_arguments.exposure_path,
             extent)
-        if os.path.exists(cli_arguments.exposure + '.shp'):
-            cli_arguments.exposure += '.shp'
+        if os.path.exists(cli_arguments.exposure_path + '.shp'):
+            cli_arguments.exposure_path += '.shp'
             print 'Download successful'
-            print 'Output: ' + cli_arguments.exposure
+            print 'Output: ' + cli_arguments.exposure_path
     else:
         print 'Exposure download extent is invalid'
         print str(extent)
 
 
-# all paths are made to be absolute
 def join_if_relative(path_argument):
     """Make path absolute.
 
@@ -188,7 +194,6 @@ def get_layer(layer_path, layer_base=None):
             print "layer is VALID"
         else:
             print "layer is NOT VALID"
-            print "Perhaps run-env-linux.sh /usr"
         return layer
     except Exception as exception:
         print exception.message
@@ -203,17 +208,11 @@ def run_impact_function(cli_arguments):
     :param cli_arguments: User inputs.
     :type cli_arguments: CommandLineArguments
     """
-    hazard = get_layer(cli_arguments.hazard, 'Hazard Layer')
-    exposure = get_layer(cli_arguments.exposure, 'Exposure Layer')
-    aggregation = None
-    if cli_arguments.aggregation:
-        aggregation = get_layer(cli_arguments.aggregation, 'Aggregation Layer')
-
     # Set up impact function
     impact_function = ImpactFunction()
-    impact_function.hazard = hazard
-    impact_function.exposure = exposure
-    impact_function.aggregation = aggregation
+    impact_function.hazard = cli_arguments.hazard_layer
+    impact_function.exposure = cli_arguments.exposure_layer
+    impact_function.aggregation = cli_arguments.aggregation_layer
     # Set the datastore
     impact_function.datastore = Folder(cli_arguments.output_dir)
     impact_function.datastore.default_vector_format = 'geojson'
@@ -261,10 +260,9 @@ def generate_impact_map_report(cli_arguments, impact_function, iface):
 
     .. versionadded:: 4.0
     """
-    layers = [impact_function.hazard, impact_function.exposure]
-    aggregation_layer = impact_function.aggregation
-    if aggregation_layer:
-        layers.append(aggregation_layer)
+    layers = [cli_arguments.hazard_layer, cli_arguments.exposure_layer]
+    if cli_arguments.aggregation_layer:
+        layers.append(cli_arguments.aggregation_layer)
     layer_registry = QgsMapLayerRegistry.instance()
     layer_registry.addMapLayers(layers)
     layer_registry.addMapLayers(impact_function.outputs)
@@ -363,19 +361,19 @@ if __name__ == '__main__':
             print "InaSAFE VERSION: " + get_version()
 
         # user is only interested in doing a download
-        elif args.download and not args.hazard:
+        elif args.download and not args.hazard_path:
             print "Downloading ..."
             download_exposure(args)
 
-        elif args.hazard and args.output_dir:
+        elif args.hazard_path and args.output_dir:
             # first do download if user asks to
-            if args.download and not args.exposure:
+            if args.download and not args.exposure_path:
                 if args.extent:
                     download_exposure(args)
                 else:
                     print 'Extent must be set when --download specified...'
 
-            if args.exposure is not None:
+            if args.exposure_path is not None:
                 status, msg, impact_function = run_impact_function(args)
                 if status != ANALYSIS_SUCCESS:
                     print 'Failed running impact function...'
