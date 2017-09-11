@@ -67,10 +67,8 @@ class CommandLineArguments(object):
     """
     def __init__(self, arguments_=None):
         LOGGER.debug('CommandLineArguments')
-        if not arguments_:
-            return
 
-        # Init private members
+        # Init members
         self._hazard_path = None
         self._exposure_path = None
         self._aggregation_path = None
@@ -78,6 +76,11 @@ class CommandLineArguments(object):
         self.hazard_layer = None
         self.exposure_layer = None
         self.aggregation_layer = None
+        self.extent = None
+        self.output_dir = None
+
+        if not arguments_:
+            return
 
         # Use setter for proper assignments
         self.hazard_path = arguments_['--hazard']
