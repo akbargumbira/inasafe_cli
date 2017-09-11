@@ -11,8 +11,9 @@ from setuptools import setup, find_packages
 
 setup(
     name='inasafe-cli',
-    version='1.0.2',
+    version='1.0.3',
     packages=find_packages(),
+    include_package_data=True,
     license='GPL',
     author='InaSAFE Team',
     author_email='info@inasafe.org',
