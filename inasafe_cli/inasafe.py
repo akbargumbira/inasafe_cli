@@ -70,25 +70,27 @@ class CommandLineArguments(object):
         if not arguments_:
             return
 
+        # Init private members
+        self._hazard_path = None
+        self._exposure_path = None
+        self._aggregation_path = None
+
+        self.hazard_layer = None
+        self.exposure_layer = None
+        self.aggregation_layer = None
+
+        # Use setter for proper assignments
         self.hazard_path = arguments_['--hazard']
-        self.hazard_layer = get_layer(self.hazard_path, 'Hazard Layer')
-
         self.exposure_path = arguments_['--exposure']
-        self.exposure_layer = get_layer(self.exposure_path, 'Exposure Layer')
-
-        self.output_dir = arguments_['--output-dir']
-        self.version = arguments_['--version']
-
         # optional arguments
         if arguments_['--aggregation']:
             self.aggregation_path = arguments_['--aggregation']
-            self.aggregation_layer = get_layer(
-                self.aggregation_path, 'Aggregation Layer')
         else:
-            self.aggregation_path = None
-            self.aggregation_layer = None
             msg = 'No aggregation layer specified..'
             LOGGER.debug(msg)
+
+        self.output_dir = arguments_['--output-dir']
+        self.version = arguments_['--version']
 
         if arguments_['--extent'] is not None:
             self.extent = arguments_['--extent'].replace(',', '.').split(':')
@@ -104,6 +106,64 @@ class CommandLineArguments(object):
             self.download = False
             self.exposure_type = None
             LOGGER.debug('no download specified')
+
+    @property
+    def hazard_path(self):
+        """Getter for the hazard path.
+
+        :return: The path to hazard layer.
+        :rtype: str
+        """
+        return self._hazard_path
+
+    @hazard_path.setter
+    def hazard_path(self, path):
+        """Setter for hazard path.
+
+        :param path: The full path to the layer.
+        :type path:str
+        """
+        self._hazard_path = path
+        self.hazard_layer = get_layer(self._hazard_path, 'Hazard Layer')
+
+    @property
+    def exposure_path(self):
+        """Getter for the exposure path.
+
+        :return: The path to exposure layer.
+        :rtype: str
+        """
+        return self._exposure_path
+
+    @exposure_path.setter
+    def exposure_path(self, path):
+        """Setter for exposure path.
+
+        :param path: The full path to the layer.
+        :type path:str
+        """
+        self._exposure_path = path
+        self.exposure_layer = get_layer(self._exposure_path, 'Exposure Layer')
+
+    @property
+    def aggregation_path(self):
+        """Getter for the aggregation path.
+
+        :return: The path to aggregation layer.
+        :rtype: str
+        """
+        return self._aggregation_path
+
+    @aggregation_path.setter
+    def aggregation_path(self, path):
+        """Setter for exposure path.
+
+        :param path: The full path to the layer.
+        :type path:str
+        """
+        self._aggregation_path = path
+        self.aggregation_layer = get_layer(
+            self._aggregation_path, 'Hazard Layer')
 
 
 def download_exposure(cli_arguments):
