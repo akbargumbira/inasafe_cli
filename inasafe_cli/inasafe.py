@@ -405,7 +405,9 @@ def build_report(cli_arguments, impact_function):
 
     return status, message
 
-if __name__ == '__main__':
+
+def main():
+    """Main function here."""
     print "inasafe"
     print ""
     try:
@@ -457,4 +459,8 @@ if __name__ == '__main__':
         print excp.__doc__
 
 
-print " "
+    print " "
+
+
+if __name__ == '__main__':
+    main()
