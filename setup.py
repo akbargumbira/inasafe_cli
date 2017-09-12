@@ -33,4 +33,7 @@ setup(
         'Programming Language :: Python',
         'Topic :: Scientific/Engineering :: GIS',
     ],
+    entry_points={
+        'console_scripts': ['inasafe=inasafe_cli.inasafe:main']
+    }
 )
