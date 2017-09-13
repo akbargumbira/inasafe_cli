@@ -24,6 +24,12 @@ Install on Ubuntu by:
    ```sudo ln -s `pwd`/inasafe  /usr/bin```
 
 ## USAGE EXAMPLES
+### Showing help
+You can type ```inasafe``` or ```inasafe -h``` or ```inasafe --help``` to show how to use this command line
+
+### Showing QGIS and InaSAFE version that is used
+```inasafe -v``` or ```inasafe --version```
+
 ### Downloading exposures
 
 ```inasafe --download --feature-type=buildings --extent=106,84:-6,2085970:106,8525945:-6,1876174 --output-dir=/home/akbar/dev/data/test_cli/```

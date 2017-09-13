@@ -189,16 +189,17 @@ def download_exposure(cli_arguments):
     if not os.path.exists(cli_arguments.output_dir):
         os.makedirs(cli_arguments.output_dir)
 
-    cli_arguments.exposure_path = os.path.join(
+    download_path = os.path.join(
         cli_arguments.output_dir, cli_arguments.exposure_type)
     if validate_geo_array(extent):
         print 'Exposure download extent is valid'
         download(
             cli_arguments.exposure_type,
-            cli_arguments.exposure_path,
+            download_path,
             extent)
-        if os.path.exists(cli_arguments.exposure_path + '.shp'):
-            cli_arguments.exposure_path += '.shp'
+        if os.path.exists(download_path + '.shp'):
+            download_path += '.shp'
+            cli_arguments.exposure_path = download_path
             print 'Download successful'
             print 'Output: ' + cli_arguments.exposure_path
     else:
