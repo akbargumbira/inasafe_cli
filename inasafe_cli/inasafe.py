@@ -76,39 +76,38 @@ class CommandLineArguments(object):
         self.hazard_layer = None
         self.exposure_layer = None
         self.aggregation_layer = None
-        self.extent = None
         self.output_dir = None
+        self.extent = None
+        self.exposure_type = None
+
+        # other mode
+        self.version = False
+        self.download = False
 
         if not arguments_:
             return
 
         # Use setter for proper assignments
-        self.hazard_path = arguments_['--hazard']
-        self.exposure_path = arguments_['--exposure']
-        # optional arguments
+        if arguments_['--hazard']:
+            self.hazard_path = arguments_['--hazard']
+
+        if arguments_['--exposure']:
+            self.exposure_path = arguments_['--exposure']
+
         if arguments_['--aggregation']:
             self.aggregation_path = arguments_['--aggregation']
-        else:
-            msg = 'No aggregation layer specified..'
-            LOGGER.debug(msg)
 
-        self.output_dir = arguments_['--output-dir']
-        self.version = arguments_['--version']
-
-        if arguments_['--extent'] is not None:
+        if arguments_['--extent']:
             self.extent = arguments_['--extent'].replace(',', '.').split(':')
-        else:
-            self.extent = None
-            msg = 'No extent specified....'
-            LOGGER.debug(msg)
 
+        if arguments_['--output-dir']:
+            self.output_dir = arguments_['--output-dir']
+
+        # mode
+        self.version = arguments_['--version']
         if arguments_['--download']:
             self.download = arguments_['--download']
             self.exposure_type = arguments_['--feature-type']
-        else:
-            self.download = False
-            self.exposure_type = None
-            LOGGER.debug('no download specified')
 
     @property
     def hazard_path(self):
@@ -219,7 +218,6 @@ def join_if_relative(path_argument):
     :rtype: str
     """
     if not os.path.isabs(path_argument):
-        LOGGER.debug('joining path for ' + path_argument)
         return os.path.join(current_dir, path_argument)
     else:
         return os.path.abspath(path_argument)
@@ -252,10 +250,8 @@ def get_layer(layer_path, layer_base=None):
         elif ext in ['.asc', '.tif', '.tiff']:
             layer = QgsRasterLayer(layer_path, layer_base)
         else:
-            print "Unknown filetype " + layer_base
-        if layer is not None and layer.isValid():
-            print "layer is VALID"
-        else:
+            print "Unknown layer's filetype " + layer_base
+        if layer is None or not layer.isValid():
             print "layer is NOT VALID"
         return layer
     except Exception as exception:
@@ -408,28 +404,26 @@ def build_report(cli_arguments, impact_function):
 
 def main():
     """Main function here."""
-    print "inasafe"
-    print ""
     try:
-        # Parse arguments, use usage.txt as syntax definition.
-        LOGGER.debug('Parse argument')
         shell_arguments = docopt(usage)
-        LOGGER.debug('Parse done')
     except DocoptExit as exc:
         print exc.message
+        return
 
     try:
         args = CommandLineArguments(shell_arguments)
         LOGGER.debug(shell_arguments)
+        # Version
         if args.version is True:
-            print "QGIS VERSION: " + str(qgis_version()).replace('0', '.')
-            print "InaSAFE VERSION: " + get_version()
+            print 'QGIS VERSION: %s' % str(qgis_version()).replace('0', '.')
+            print 'InaSAFE VERSION: %s' % get_version()
 
-        # user is only interested in doing a download
+        # User is only interested in doing a download
         elif args.download and not args.hazard_path:
             print "Downloading ..."
             download_exposure(args)
 
+        # Interested in running a scenario
         elif args.hazard_path and args.output_dir:
             # first do download if user asks to
             if args.download and not args.exposure_path:
@@ -457,9 +451,6 @@ def main():
     except Exception as excp:
         print excp.message
         print excp.__doc__
-
-
-    print " "
 
 
 if __name__ == '__main__':

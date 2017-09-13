@@ -5,14 +5,17 @@ __filename__ = 'test_inasafe.py'
 __date__ = '01/06/15'
 __copyright__ = 'jannes@kartoza.com'
 
-
+import sys
 import unittest
 import shutil
 import os
 from tempfile import mkdtemp
+from contextlib import contextmanager
+from StringIO import StringIO
 
 import safe
 from inasafe import (
+    main,
     download_exposure,
     run_impact_function,
     build_report,
@@ -21,6 +24,17 @@ from inasafe import (
     ANALYSIS_SUCCESS)
 
 from PyQt4.QtCore import QDir
+
+
+@contextmanager
+def captured_output():
+    new_out, new_err = StringIO(), StringIO()
+    old_out, old_err = sys.stdout, sys.stderr
+    try:
+        sys.stdout, sys.stderr = new_out, new_err
+        yield sys.stdout, sys.stderr
+    finally:
+        sys.stdout, sys.stderr = old_out, old_err
 
 
 def setup_args(args_dict):
@@ -57,8 +71,7 @@ class TestInasafeCommandLine(unittest.TestCase):
             '--aggregation': None,
             '--extent': '106,7999364:-6,2085970:106,8525945:-6,1676174',
             '--output-dir': 'test_cli',
-            '--version': False,
-            'LAYER_NAME': []})
+            '--version': False})
 
         # 2. Args with aggregation
         self.args_with_aggregation = setup_args({
@@ -75,8 +88,7 @@ class TestInasafeCommandLine(unittest.TestCase):
                 'small_grid.geojson'),
             '--extent': None,
             '--output-dir': 'test_cli',
-            '--version': False,
-            'LAYER_NAME': []})
+            '--version': False})
 
         # 3. Args for download
         self.args_download = setup_args({
@@ -88,8 +100,15 @@ class TestInasafeCommandLine(unittest.TestCase):
             '--help': False,
             '--feature-type': 'buildings',
             '--output-dir': 'test_cli',
-            '--version': False,
-            'LAYER_NAME': []})
+            '--version': False})
+
+    def test_main(self):
+        """Test basic command."""
+        with captured_output() as (out, err):
+            main()
+        output = out.getvalue().strip()
+        usage = open('usage.txt', 'r').read()
+        self.assertIn(output, usage)
 
     def test_download(self):
         """Test download using CLI"""
