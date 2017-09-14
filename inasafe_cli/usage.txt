@@ -1,7 +1,7 @@
 inasafe: Natural hazard impact estimator.
 
 Usage:
-    inasafe --hazard=HAZARD_FILE (--download --feature-type=FEATURE_TYPE | --exposure=EXP_FILE) [--aggregation=AG_FILE] --output-dir=OUTPUT_DIR [--extent=XMIN:YMIN:XMAX:YMAX]
+    inasafe --hazard=HAZARD_FILE --exposure=EXP_FILE (--aggregation=AG_FILE | --extent=XMIN:YMIN:XMAX:YMAX) --output-dir=OUTPUT_DIR
     inasafe --download --feature-type=FEATURE_TYPE --extent=XMIN:YMIN:XMAX:YMAX --output-dir=OUTPUT_DIR
     inasafe -h | --help
     inasafe -v | --version

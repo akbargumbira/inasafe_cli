@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='inasafe-cli',
-    version='1.0.5',
+    version='1.0.6',
     packages=find_packages(),
     include_package_data=True,
     license='GPL',
@@ -33,4 +33,7 @@ setup(
         'Programming Language :: Python',
         'Topic :: Scientific/Engineering :: GIS',
     ],
+    entry_points={
+        'console_scripts': ['inasafe=inasafe_cli.inasafe:main']
+    }
 )
