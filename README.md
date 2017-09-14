@@ -6,22 +6,18 @@
 This is the command line client implementation for [InaSAFE](http://inasafe.org).
 
 ## Installation
-Install on Ubuntu by:
-1. Adding InaSAFE path to environment e.g:
+1. Install InaSAFE CLI by from pip by running this command:
 
-   ```export InaSAFEQGIS=/home/akbar/dev/python/inasafe-dev/```
-   
-2. Adding QGIS to environment, or simply by updating run-env-linux.sh as necessary and run:
+   ```pip install inasafe-cli```
+
+2. Make sure that your environment has QGIS. You can check if you environment is ready by running this on your python console:
+
+   ```import qgis```
+
+3. Add QGIS python plugin directory into your path, or simply by running:
    
    ```source run-env-linux.sh```
    
-3. Making inasafe CLI executable:
-   
-   ```chmod ug+x inasafe```
-   
-4. Soft-linking executable inasafe CLI to bin:
-   
-   ```sudo ln -s `pwd`/inasafe  /usr/bin```
 
 ## USAGE EXAMPLES
 ### Showing help
@@ -31,14 +27,13 @@ You can type ```inasafe``` or ```inasafe -h``` or ```inasafe --help``` to show h
 ```inasafe -v``` or ```inasafe --version```
 
 ### Downloading exposures
-
 ```inasafe --download --feature-type=buildings --extent=106,84:-6,2085970:106,8525945:-6,1876174 --output-dir=/home/akbar/dev/data/test_cli/```
 
 ### Running scenario
-- Downloading the exposure on the fly:
+The path to the hazard, exposure, or aggregation files
 
-```inasafe --hazard=safe/test/data/gisv4/hazard/tsunami_vector.geojson --download --feature-type=buildings  --output-dir=/home/akbar/dev/data/test_cli/ --extent=106,7999364:-6,2085970:106,8525945:-6,1676174```
-
-- Specifying the exposure:
+- Using extent:
 
 ```inasafe --hazard=safe/test/data/gisv4/hazard/tsunami_vector.geojson --exposure=safe/test/data/gisv4/exposure/raster/population.asc  --output-dir=/home/akbar/dev/data/test_cli/ --extent=106,7999364:-6,2085970:106,8525945:-6,1676174```
+
+- Using aggregation layer

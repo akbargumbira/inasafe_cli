@@ -246,14 +246,16 @@ def get_layer(layer_path, layer_base=None):
         basename, ext = os.path.splitext(os.path.basename(layer_path))
         if not layer_base:
             layer_base = basename
+
         if ext in ['.shp', '.geojson', '.gpkg']:
             layer = QgsVectorLayer(layer_path, layer_base, 'ogr')
         elif ext in ['.asc', '.tif', '.tiff']:
             layer = QgsRasterLayer(layer_path, layer_base)
         else:
             print "Unknown layer's filetype " + layer_base
+
         if layer is None or not layer.isValid():
-            print "layer is NOT VALID"
+            print "Layer %s is NOT VALID" % layer_path
         return layer
     except Exception as exception:
         print exception.message
@@ -421,19 +423,12 @@ def main():
 
         # User is only interested in doing a download
         elif args.download and not args.hazard_path:
-            print "Downloading ..."
+            print "Downloading..."
             download_exposure(args)
 
         # Interested in running a scenario
-        elif args.hazard_path and args.output_dir:
-            # first do download if user asks to
-            if args.download and not args.exposure_path:
-                if args.extent:
-                    download_exposure(args)
-                else:
-                    print 'Extent must be set when --download specified...'
-
-            if args.exposure_path is not None:
+        elif args.hazard_layer and args.output_dir:
+            if args.exposure_layer or args.extent:
                 status, msg, impact_function = run_impact_function(args)
                 if status != ANALYSIS_SUCCESS:
                     print 'Failed running impact function...'
@@ -445,8 +440,6 @@ def main():
                     if status != ImpactReport.REPORT_GENERATION_SUCCESS:
                         print 'Failed building reports...'
                         print msg
-            else:
-                print "Download unsuccessful"
         else:
             print "Argument combination not recognised"
     except Exception as excp:
