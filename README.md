@@ -14,9 +14,7 @@ This is the command line client implementation for [InaSAFE](http://inasafe.org)
 
    ```import qgis```
 
-3. Add QGIS python plugin directory into your path, or simply by running:
-   
-   ```source run-env-linux.sh```
+3. Add QGIS python plugin directory into your python path. [See here](https://github.com/inasafe/inasafe/blob/develop/run-env-linux.sh) 
    
 
 ## USAGE EXAMPLES
@@ -43,8 +41,11 @@ Feature type can be:
 
 When specifying the path to the hazard, exposure, or aggregation file, it can be relative or absolute.
 
+You can run the scenario with extent or (mutually exclusive) with an aggregation layer
+
 - Using extent:
 
 ```inasafe --hazard=safe/test/data/gisv4/hazard/tsunami_vector.geojson --exposure=safe/test/data/gisv4/exposure/raster/population.asc  --output-dir=/home/akbar/dev/data/test_cli/ --extent=106,7999364:-6,2085970:106,8525945:-6,1676174```
 
 - Using aggregation layer
+```inasafe --hazard=safe/test/data/gisv4/hazard/tsunami_vector.geojson --exposure=safe/test/data/gisv4/exposure/raster/population.asc  --aggregation=safe/test/data/gisv4//aggregation/small_grid_complex.geojson  --output-dir=/home/akbar/dev/data/test_cli/```
