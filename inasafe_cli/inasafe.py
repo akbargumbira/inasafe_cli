@@ -192,7 +192,6 @@ def download_exposure(cli_arguments):
     download_path = os.path.join(
         cli_arguments.output_dir, cli_arguments.exposure_type)
     if validate_geo_array(extent):
-        print 'Exposure download extent is valid'
         download(
             cli_arguments.exposure_type,
             download_path,
@@ -427,19 +426,28 @@ def main():
             download_exposure(args)
 
         # Interested in running a scenario
-        elif args.hazard_layer and args.output_dir:
-            if args.exposure_layer or args.extent:
-                status, msg, impact_function = run_impact_function(args)
-                if status != ANALYSIS_SUCCESS:
-                    print 'Failed running impact function...'
+        elif args.hazard_path and args.exposure_path and args.output_dir:
+            if not args.hazard_layer:
+                return
+
+            if not args.exposure_layer:
+                return
+
+            # if using aggregation make sure it's valid
+            if args.aggregation_path and not args.exposure_layer:
+                return
+
+            status, msg, impact_function = run_impact_function(args)
+            if status != ANALYSIS_SUCCESS:
+                print 'Failed running impact function...'
+                print msg
+            else:
+                print 'Running impact function is succesfull...'
+                print 'Building reports...'
+                status, msg = build_report(args, impact_function)
+                if status != ImpactReport.REPORT_GENERATION_SUCCESS:
+                    print 'Failed building reports...'
                     print msg
-                else:
-                    print 'Running impact function is succesfull...'
-                    print 'Building reports...'
-                    status, msg = build_report(args, impact_function)
-                    if status != ImpactReport.REPORT_GENERATION_SUCCESS:
-                        print 'Failed building reports...'
-                        print msg
         else:
             print "Argument combination not recognised"
     except Exception as excp:

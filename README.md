@@ -21,16 +21,27 @@ This is the command line client implementation for [InaSAFE](http://inasafe.org)
 
 ## USAGE EXAMPLES
 ### Showing help
+
 You can type ```inasafe``` or ```inasafe -h``` or ```inasafe --help``` to show how to use this command line
 
 ### Showing QGIS and InaSAFE version that is used
+
 ```inasafe -v``` or ```inasafe --version```
 
 ### Downloading exposures
+
 ```inasafe --download --feature-type=buildings --extent=106,84:-6,2085970:106,8525945:-6,1876174 --output-dir=/home/akbar/dev/data/test_cli/```
 
+Feature type can be:
+- roads 
+- buildings
+- building-points 
+- potential-idp
+- boundary-x (with x from 1 to11)
+
 ### Running scenario
-The path to the hazard, exposure, or aggregation files
+
+When specifying the path to the hazard, exposure, or aggregation file, it can be relative or absolute.
 
 - Using extent:
 
