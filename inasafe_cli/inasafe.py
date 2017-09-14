@@ -277,6 +277,8 @@ def run_impact_function(cli_arguments):
     impact_function.exposure = cli_arguments.exposure_layer
     impact_function.aggregation = cli_arguments.aggregation_layer
     # Set the datastore
+    if not os.path.exists(cli_arguments.output_dir):
+        os.makedirs(cli_arguments.output_dir)
     impact_function.datastore = Folder(cli_arguments.output_dir)
     impact_function.datastore.default_vector_format = 'geojson'
 
