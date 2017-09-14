@@ -246,15 +246,17 @@ def get_layer(layer_path, layer_base=None):
         if not layer_base:
             layer_base = basename
 
-        if ext in ['.shp', '.geojson', '.gpkg']:
-            layer = QgsVectorLayer(layer_path, layer_base, 'ogr')
-        elif ext in ['.asc', '.tif', '.tiff']:
-            layer = QgsRasterLayer(layer_path, layer_base)
-        else:
-            print "Unknown layer's filetype " + layer_base
+        if os.path.exists(layer_path):
+            if ext in ['.shp', '.geojson', '.gpkg']:
+                layer = QgsVectorLayer(layer_path, layer_base, 'ogr')
+            elif ext in ['.asc', '.tif', '.tiff']:
+                layer = QgsRasterLayer(layer_path, layer_base)
+            else:
+                print "Unknown layer's filetype " + layer_base
 
         if layer is None or not layer.isValid():
             print "Layer %s is NOT VALID" % layer_path
+
         return layer
     except Exception as exception:
         print exception.message
