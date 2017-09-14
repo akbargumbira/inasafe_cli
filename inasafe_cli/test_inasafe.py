@@ -21,7 +21,8 @@ from inasafe import (
     build_report,
     CommandLineArguments,
     ImpactReport,
-    ANALYSIS_SUCCESS)
+    ANALYSIS_SUCCESS,
+    USAGE)
 
 from PyQt4.QtCore import QDir
 
@@ -112,8 +113,7 @@ class TestInasafeCommandLine(unittest.TestCase):
         with captured_output() as (out, err):
             main()
         output = out.getvalue().strip()
-        usage = open('usage.txt', 'r').read()
-        self.assertIn(output, usage)
+        self.assertIn(output, USAGE)
 
     def test_download(self):
         """Test download using CLI"""

@@ -51,13 +51,8 @@ current_dir = os.path.abspath(
     os.path.realpath(os.getcwd()))
 
 QGIS_APP, CANVAS, IFACE, PARENT = get_qgis_app()
-
-usage_dir = os.path.dirname(os.path.abspath(__file__))
-
-usage = r""
-usage_file = file(os.path.join(usage_dir, 'usage.txt'))
-for delta in usage_file:
-    usage += delta
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+USAGE = file(os.path.join(PROJECT_ROOT, 'usage.txt')).read()
 LOGGER = logging.getLogger('InaSAFE')
 
 
@@ -411,7 +406,7 @@ def build_report(cli_arguments, impact_function):
 def main():
     """Main function here."""
     try:
-        shell_arguments = docopt(usage)
+        shell_arguments = docopt(USAGE)
     except DocoptExit as exc:
         print exc.message
         return
