@@ -104,6 +104,11 @@ class TestInasafeCommandLine(unittest.TestCase):
 
     def test_main(self):
         """Test basic command."""
+        # Hackaround argv not defined on travis
+        import sys
+        if not hasattr(sys, 'argv'):
+            sys.argv = ['']
+
         with captured_output() as (out, err):
             main()
         output = out.getvalue().strip()
