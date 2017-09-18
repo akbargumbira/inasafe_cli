@@ -5,7 +5,11 @@ __filename__ = 'test_inasafe.py'
 __date__ = '01/06/15'
 __copyright__ = 'jannes@kartoza.com'
 
+# Hackaround for travis
 import sys
+if not hasattr(sys, 'argv'):
+    sys.argv = ['']
+
 import unittest
 import shutil
 import os
