@@ -24,10 +24,11 @@ from qgis.core import (
     QgsRectangle,
     QgsMapLayerRegistry,
     QgsCoordinateReferenceSystem)
+from qgis.testing.mocked import get_iface
 
 from docopt import docopt, DocoptExit
 
-from safe.test.utilities import get_qgis_app
+
 from safe.common.version import get_version
 from safe.utilities.gis import qgis_version, validate_geo_array
 from safe.utilities.osm_downloader import download
@@ -47,13 +48,11 @@ __license__ = "GPL version 3"
 __email__ = "info@inasafe.org"
 __revision__ = '$Format:%H$'
 
-current_dir = os.path.abspath(
-    os.path.realpath(os.getcwd()))
-
-QGIS_APP, CANVAS, IFACE, PARENT = get_qgis_app()
+CURRENT_DIR = os.path.abspath(os.path.realpath(os.getcwd()))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 USAGE = file(os.path.join(PROJECT_ROOT, 'usage.txt')).read()
 LOGGER = logging.getLogger('InaSAFE')
+IFACE = get_iface()
 
 
 class CommandLineArguments(object):
@@ -213,7 +212,7 @@ def join_if_relative(path_argument):
     :rtype: str
     """
     if not os.path.isabs(path_argument):
-        return os.path.join(current_dir, path_argument)
+        return os.path.join(CURRENT_DIR, path_argument)
     else:
         return os.path.abspath(path_argument)
 

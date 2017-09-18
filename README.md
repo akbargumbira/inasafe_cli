@@ -48,4 +48,5 @@ You can run the scenario with extent or (mutually exclusive) with an aggregation
 ```inasafe --hazard=safe/test/data/gisv4/hazard/tsunami_vector.geojson --exposure=safe/test/data/gisv4/exposure/raster/population.asc  --output-dir=/home/akbar/dev/data/test_cli/ --extent=106,7999364:-6,2085970:106,8525945:-6,1676174```
 
 - Using aggregation layer
+
 ```inasafe --hazard=safe/test/data/gisv4/hazard/tsunami_vector.geojson --exposure=safe/test/data/gisv4/exposure/raster/population.asc  --aggregation=safe/test/data/gisv4//aggregation/small_grid_complex.geojson  --output-dir=/home/akbar/dev/data/test_cli/```
